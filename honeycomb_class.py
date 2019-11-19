@@ -88,7 +88,7 @@ class Honeycomb:
         if N == 0:
             N = np.zeros([len(self.voronoi_point)])
         if depth_sum == 0:
-            depth_sum = np.zeros([len(voronoi_point)])
+            depth_sum = np.zeros([len(self.voronoi_point)])
         for i in range(len(xy)):
             sim = self.Delaunay.find_simplex(xy[i])
             if sim != -1:
@@ -97,7 +97,8 @@ class Honeycomb:
                     n = np.arange(len(self.voronoi_point))[(abs(self.voronoi_point[:,0] - sim[j][0]) < self.r/10000) & (abs(self.voronoi_point[:,1] - sim[j][1]) < self.r/10000)]
                     if len(n) == 1:
                         N[n] = N[n] + 1
-                        depth_sum[n] == depth_sum[n] + depth[i]
-        return depth_sum,N
+                        depth_sum[n] = depth_sum[n] + depth[i]
+                        break
+        return N,depth_sum
 
 
