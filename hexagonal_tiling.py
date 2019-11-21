@@ -2,6 +2,8 @@ from scipy.spatial import Delaunay, delaunay_plot_2d, Voronoi, voronoi_plot_2d
 import numpy as np
 import matplotlib.pyplot as plt
 
+__all__ = ['Honeycomb']
+
 class Honeycomb:
 
     def __init__(self,r,*,x=[0,0],y=[0,0]):
@@ -102,7 +104,7 @@ class Honeycomb:
                         break
         return depth_sum,N
 
-    def fill_in(self,x,y,depth):
+    def depth_weighted_mean(self,x,y,depth):
         p = self.find_hexagon(x,y) 
         v_p = self.voronoi_point
         depth = np.array(depth)
