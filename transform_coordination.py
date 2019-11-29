@@ -76,4 +76,3 @@ def enu2latlon(e,n,u,lat0,lon0,h0,*,ell=Ellipsoid()):
     x,y,z = enu2ecef(e,n,u,lat0,lon0,h0,ell=Ell)
     lat,lon = ecef2latlon(x,y,z,ell=Ell)
     return lat,lon
-
