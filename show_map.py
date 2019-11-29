@@ -8,7 +8,7 @@ def show_map(input_deeperfiles,coastline_xmlfile,*,localmap=LocalMap()):
     coast = cstline_xml2npy(coastline_xmlfile)
     odaiba =  deeper_csv2LocalMap(input_deeperfiles,localmap=lm)
     odaiba = delete_landing(odaiba,coast)
-    plt.contourf(odaiba.lonlabel,odaiba.latlabel,odaiba.values)
+    plt.contourf(odaiba.lonlabel,odaiba.latlabel,odaiba.values,cmap = 'viridis_r')
     cbar = plt.colorbar()
     cbar.set_label(' depth [m]')
     draw_coastline(coast)

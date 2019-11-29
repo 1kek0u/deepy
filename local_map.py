@@ -27,7 +27,6 @@ class LocalMap:
         self.values = a
 
     def fill_grid(self,x,y,depth):
-        values = self.values
         x = np.array(x)
         y = np.array(y)
         x = x.reshape(len(x),1)

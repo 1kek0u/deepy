@@ -9,7 +9,7 @@ from local_map import LocalMap
 from hexagonal_tiling import Honeycomb
 from transform_coordination import latlon2enu, enu2latlon 
 
-__all__ = ['read_deeper','deeper_csv2localdata','deeper_csv2localdata']
+__all__ = ['read_deeper','deeper_csv2localdata','deeper_csv2localdata','delete_landing']
 
 def read_deeper(input_file:str ,*,drop:bool = True):
     d = pd.read_csv(input_file,names = ['lat','lon','depth','t'])
@@ -25,11 +25,12 @@ def read_deeper(input_file:str ,*,drop:bool = True):
     return d
 
 def deeper_csv2LocalMap(input_files,*,localmap=LocalMap()):
+    lm = localmap
     files = np.array(input_files)
     files = files.reshape(len(files),1)
     for i in range(len(files[:])):
         d = read_deeper(files[i,0])
-        e,n,u = latlon2enu(d.loc[:,'lat'],d.loc[:,'lon'],0,localmap.origin[0],localmap.origin[1],0)
+        e,n,u = latlon2enu(d.loc[:,'lat'],d.loc[:,'lon'],0,lm.origin[0],lm.origin[1],0)
         e,n = kalmanfilter_2d(e,n,d.loc[:,'t'])
         depth0 = d.loc[:,'depth']
         judge = judge_stability(d.loc[:,'t'])
@@ -44,7 +45,7 @@ def deeper_csv2LocalMap(input_files,*,localmap=LocalMap()):
             x = np.hstack((x,e))
             y = np.hstack((y,n))
             depth = np.hstack((depth,depth0))
-    hc = Honeycomb(1,x=[localmap.xrange[0],localmap.xrange[1]],y=[localmap.yrange[0],localmap.yrange[1]])
+    hc = Honeycomb(1,x=[lm.xrange[0],lm.xrange[1]],y=[lm.yrange[0],lm.yrange[1]])
     depth = hc.depth_weighted_mean(x,y,depth)
     x = hc.voronoi_point[:,0]
     y = hc.voronoi_point[:,1]
@@ -52,8 +53,8 @@ def deeper_csv2LocalMap(input_files,*,localmap=LocalMap()):
     x = x[judge]
     y = y[judge]
     depth = depth[judge]
-    localmap.fill_grid(x,y,depth)
-    return localmap
+    lm.fill_grid(x,y,depth)
+    return lm,x,y,depth
 
 def deeper_csv2localdata(input_files,*,localmap=LocalMap()):
     files = np.array(input_files)
