@@ -8,14 +8,12 @@ __all__ = ['cstline_xml2csv','cstline_xml2npy','draw_coastline']
 def cstline_xml2csv(input_xml:str):
     """
     Convert Japanese coast-line imformation XML file into numerical CSV file devided by blocks.
-    Japanese coast-line imformation XML file is avalable in here <http://>
-
+    Japanese coast-line imformation XML file is avalable in here <https://fgd.gsi.go.jp/download/mapGis.php>
 
     Parameters
     ----------
         input_xml:str
             Name of XML File that has coast-line imformations to convert into Numerical data that formatted CSV .
-   
     """
     with codecs.open(input_xml,'r','utf-8','ignore')as f:
         s = f.read()
@@ -40,10 +38,8 @@ def cstline_xml2csv(input_xml:str):
         n = n+1
         i = j + len(P_end) 
 
-
 def cstline_xml2npy(input_xml:str):
     """
-    
     Parameters
     ----------
         input_xml:str
@@ -105,44 +101,6 @@ def cstline_xml2npy(input_xml:str):
             pk = k + 1
     return coastlines 
 
-
-    """
-    with codecs.open(input_xml,'r','utf-8','ignore')as f:
-        s = f.read()
-    P_beg = '<gml:posList>\r\n'  
-    P_end = '</gml:posList>'
-    coastlines = np.zeros([500,2,s.count(P_beg)])
-    m = len(P_beg)
-    i = 0
-    n = 0
-    while True:
-        i = s.find(P_beg,i)
-        if i == -1:
-            break
-        j = s.find(P_end,i)
-        pk = i + m
-        cst = np.array([np.nan,np.nan])
-        while True:
-            k = s.find(' ',pk,j)
-            if k == -1:
-                cst = cst[1:,:]
-                zero = np.empty((500 - len(cst),2))
-                zero[:,:] = np.nan
-                cst = np.vstack((cst,zero))
-                coastlines[:,:,n] = cst
-                n = n+1
-                cst = np.array([np.nan,np.nan])
-                i = pk 
-                break
-            lat = float(s[pk:k-1])
-            pk = k + 1
-            k = s.find('\n',pk,j)
-            lon = float(s[pk:k-1])
-            cst = np.vstack((cst,np.array([lat,lon])))
-            pk = k + 1
-    return coastlines 
-    """
-
 def draw_coastline(coastlines,color='k',fig=np.nan):
     c = color
     for i in range (len(coastlines[0,0,:])):
@@ -154,3 +112,4 @@ def draw_coastline(coastlines,color='k',fig=np.nan):
             plt.plot(lon,lat,'-',color=c)
         else :
             fig.plot(lon,lat,'-',color=c)
+
